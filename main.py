@@ -12,7 +12,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 # Import your forms from the forms.py
 from forms import CreatePostForm,RegisterForm,LoginForm,CommentForm
-
+import urllib.parse
 
 
 
@@ -44,6 +44,7 @@ class Base(DeclarativeBase):
     pass
 db = SQLAlchemy(model_class=Base)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI","sqlite:///db.sqlite3")
+encoded = urllib.parse.quote_plus(os.environ.get("DB_URI"))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager.init_app(app)
