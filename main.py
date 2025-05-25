@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from flask import Flask, abort, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
@@ -11,7 +12,8 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 # Import your forms from the forms.py
 from forms import CreatePostForm,RegisterForm,LoginForm,CommentForm
-
+from dotenv import load_dotenv,find_dotenv
+load_dotenv(find_dotenv())
 
 
 
@@ -29,7 +31,8 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
+print(app.config['SECRET_KEY'])
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 gravatar = Gravatar(app)
@@ -41,7 +44,7 @@ login_manager.login_view = "login"
 class Base(DeclarativeBase):
     pass
 db = SQLAlchemy(model_class=Base)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db.sqlite3"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager.init_app(app)
@@ -241,4 +244,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)
